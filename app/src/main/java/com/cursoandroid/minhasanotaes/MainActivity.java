@@ -12,21 +12,35 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
+    private AnotacaoPreferencias preferencias;
+    private EditText editAnotacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        preferencias = new AnotacaoPreferencias(getApplicationContext());
+        editAnotacao = findViewById(R.id.editTextAnotacao);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                String textoRecuperado = editAnotacao.getText().toString();
+                if(textoRecuperado.equals("")){
+                    Snackbar.make(view, "Preencha a anotação", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }else{
+                    preferencias.salvarAnotacao(textoRecuperado);
+                    Snackbar.make(view, "Anotação salva!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
+
+        editAnotacao.setText(preferencias.recuperarAnotacao());
     }
 }
